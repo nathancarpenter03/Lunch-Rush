@@ -7,19 +7,35 @@ import Restaurants from './Restaurants';
 import './Application.css';
 
 class Application extends Component {
-  constructor(props) {
-    super(props);
-  }
+	constructor(props) {
+		super(props);
+		this.state = {
+			currentUser: null
+		};
+	}
 
-  render() {
-    return (
-      <div className="Application">
-        <header className="Application--header">
-          <h1>Lunch Rush</h1>
-        </header>
-      </div>
-    );
-  }
+	componentDidMount() {
+		auth.onAuthStateChanged((currentUser) => {
+			console.log("Auth state changed", currentUser);
+			// logs the google sign in object
+			this.setState({ currentUser });
+		});
+	}
+
+	render() {
+		const {currentUser} = this.state;
+		return (
+			<div className="Application">
+				<header className="Application--header">
+					<h1>Lunch Rush</h1>
+					<div>
+					{!currentUser && <SignIn />}
+					{currentUser && <CurrentUser user={currentUser} />}
+					</div>
+				</header>
+			</div>
+		);
+	}
 }
 
 export default Application;
